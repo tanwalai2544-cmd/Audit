@@ -189,7 +189,7 @@
                     </div>
                 </div>
 
-                <!-- 2. ส่วนค่าใช้จ่ายสินค้าในร้าน (ตามข้อกำหนดที่ 1 และ 2) -->
+                <!-- 2. ส่วนค่าใช้จ่ายสินค้าในร้าน -->
                 <div id="form-procurement-container" class="hidden">
                     <div class="flex items-center justify-between border-b border-red-100 pb-3 mb-4">
                         <h2 class="text-lg font-bold text-red-700 flex items-center gap-2"><span>📦</span> ค่าใช้จ่ายสินค้าในร้าน</h2>
@@ -215,7 +215,6 @@
                             </div>
                         </div>
 
-                        <!-- ส่วนข้อมูลบัญชีผู้จำหน่าย (ตามข้อ 2: ให้กรอกเลขที่บัญชี + Dropdown เลือกธนาคาร + เอาช่องรายการสินค้าออก) -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                             <div>
                                 <label class="block text-xs font-semibold text-gray-700 mb-1">ธนาคารผู้รับ / ช่องทาง</label>
@@ -262,7 +261,7 @@
                     </div>
                 </div>
 
-                <!-- 3. ส่วนระบบออกใบเสร็จ / ภาษี / CN (ตามข้อ 3) -->
+                <!-- 3. ส่วนระบบออกใบเสร็จ / ภาษี / CN -->
                 <div id="form-tax-container" class="hidden">
                     <div class="flex items-center justify-between border-b border-red-100 pb-3 mb-4">
                         <h2 class="text-lg font-bold text-red-700 flex items-center gap-2"><span>🧾</span> ระบบออกใบเสร็จ / ภาษี / CN</h2>
@@ -278,12 +277,11 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block font-semibold text-gray-700 mb-1 text-sm">อ้างอิงเลขที่บิล / ธุรกรรมเดิม (ค้นหาตามรูปแบบ 4 ตัวแรก ค.ศ., 2 ตัวถัดมา เดือน, 3 ตัวถัดมา จำนวนครั้ง)</label>
+                            <label class="block font-semibold text-gray-700 mb-1 text-sm">อ้างอิงเลขที่บิล / ธุรกรรมเดิม</label>
                             <div class="flex gap-2 mb-2">
                                 <input type="text" id="taxSearchInput" placeholder="พิมพ์ค้นหารหัสธุรกรรม เช่น 202611..." class="w-full border border-gray-300 rounded-xl p-2.5 text-sm shadow-sm focus:ring-2 focus:ring-red-500">
                                 <button type="button" onclick="filterTaxTransactions()" class="bg-gray-800 hover:bg-black text-white px-4 py-2 rounded-xl text-sm font-bold shadow transition">ค้นหา</button>
                             </div>
-                            <!-- Dropdown 10 ข้อมูลตามหลักรหัสธุรกรรมที่กำหนด -->
                             <select id="taxRefIdDropdown" onchange="onTaxTransactionSelected()" class="w-full border border-gray-300 rounded-2xl p-3.5 font-bold text-red-700 text-base shadow-sm bg-red-50/40">
                                 <option value="202611001" data-customer="คุณสมชาย ใจดี (ลูกค้าฟาร์มแมว)" data-amount="3500">202611001 | 13 พ.ย. 2026 (ครั้งที่ 1)</option>
                                 <option value="202611002" data-customer="คุณวิภาวรรณ สุราษฎร์ (สมาชิก VIP)" data-amount="1250">202611002 | 13 พ.ย. 2026 (ครั้งที่ 2)</option>
@@ -360,63 +358,83 @@
                     </div>
                 </section>
 
-                <!-- งบการเงิน & งบดุลอัตโนมัติ -->
-                <section id="section-reports" class="bg-white p-6 rounded-3xl shadow-sm border border-red-100 flex flex-col hidden">
-                    <div class="flex justify-between items-center border-b border-red-100 pb-3 mb-4">
-                        <h2 class="text-lg font-bold text-red-700 flex items-center gap-2"><span>📈</span> งบกำไรขาดทุน & งบดุลอัตโนมัติ</h2>
-                        <div class="flex items-center gap-1.5 bg-gray-100 p-1 rounded-2xl border text-sm font-semibold shadow-inner">
-                            <button onclick="switchReportPeriod('monthly')" id="rep-monthly" class="px-4 py-2 rounded-xl bg-red-600 text-white font-bold shadow-sm transition">รายเดือน</button>
-                            <button onclick="switchReportPeriod('yearly')" id="rep-yearly" class="px-4 py-2 rounded-xl text-gray-700 hover:text-gray-900 transition">รายปี</button>
+                <!-- งบการเงิน & รายรับจาก POS (ตามคำขอใหม่) -->
+                <section id="section-reports" class="bg-white p-6 rounded-3xl shadow-sm border border-red-100 flex flex-col">
+                    <div class="flex justify-between items-center border-b border-red-100 pb-3 mb-4 flex-wrap gap-3">
+                        <h2 class="text-lg font-bold text-red-700 flex items-center gap-2"><span>📈</span> งบการเงิน & สรุปรายรับจากระบบ POS</h2>
+                        <div class="flex items-center gap-2">
+                            <!-- Filter เดือนและปี -->
+                            <select id="posFilterMonth" onchange="renderPosRevenueList()" class="border border-gray-300 rounded-xl px-3 py-1.5 text-sm font-bold text-red-700 bg-red-50/50 shadow-sm">
+                                <option value="11">พฤศจิกายน (11)</option>
+                                <option value="10">ตุลาคม (10)</option>
+                                <option value="09">กันยายน (09)</option>
+                            </select>
+                            <select id="posFilterYear" onchange="renderPosRevenueList()" class="border border-gray-300 rounded-xl px-3 py-1.5 text-sm font-bold text-gray-700 bg-gray-50 shadow-sm">
+                                <option value="2026">2026</option>
+                                <option value="2025">2025</option>
+                            </select>
                         </div>
                     </div>
 
-                    <div class="space-y-4 max-h-[360px] overflow-y-auto pr-1">
-                        <div class="border border-red-100 rounded-2xl p-4 bg-red-50/30 text-sm shadow-sm">
-                            <h3 class="font-bold text-red-900 text-base mb-2.5 flex justify-between items-center">
-                                <span>1. งบกำไรขาดทุน (Income Statement)</span>
-                                <span id="plPeriodTitle" class="text-gray-500 font-semibold text-xs bg-white px-2.5 py-1 rounded-full border shadow-sm">พฤศจิกายน 2026</span>
-                            </h3>
-                            <div class="space-y-2">
-                                <div class="flex justify-between font-bold">
-                                    <span>รายได้จากการขายสินค้า (Sales Revenue)</span>
-                                    <span id="plSales" class="text-emerald-700">+125,000.00 ฿</span>
-                                </div>
-                                <div class="flex justify-between text-gray-600 pl-3">
-                                    <span>หัก: ต้นทุนขายสินค้า (COGS)</span>
-                                    <span id="plCOGS">-75,000.00 ฿</span>
-                                </div>
-                                <div class="flex justify-between font-bold border-t pt-1.5">
-                                    <span>กำไรขั้นต้น (Gross Profit)</span>
-                                    <span id="plGrossProfit">50,000.00 ฿</span>
-                                </div>
-                                <div class="flex justify-between text-gray-600 pl-3">
-                                    <span>หัก: ค่าใช้จ่ายดำเนินงาน & ค่าใช้จ่ายร้าน</span>
-                                    <span id="plDynamicExp">0.00 ฿</span>
-                                </div>
-                                <div class="flex justify-between font-bold text-red-700 border-t pt-2 text-base">
-                                    <span>กำไรสุทธิ (Net Profit)</span>
-                                    <span id="plNetProfit">50,000.00 ฿</span>
-                                </div>
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                        <!-- ฝั่งซ้ายมือ: รายรับที่เชื่อมมาจาก POS (Mockup 30 วัน) -->
+                        <div class="md:col-span-5 bg-gray-50/80 p-4 rounded-2xl border border-gray-200 flex flex-col">
+                            <div class="flex justify-between items-center mb-2 pb-2 border-b">
+                                <span class="font-bold text-sm text-gray-800">🛒 รายรับจาก POS (30 วัน)</span>
+                                <span id="posTotalMonthlyRevenue" class="text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">0.00 ฿</span>
+                            </div>
+                            <p class="text-xs text-gray-500 mb-2">💡 คลิกเลือกรายการแต่ละวันเพื่อดูรายละเอียดเชิงลึก</p>
+                            <!-- List 30 Days Scrollable -->
+                            <div id="pos-revenue-list-container" class="space-y-2 max-h-[280px] overflow-y-auto pr-1">
+                                <!-- Rendered via JavaScript -->
                             </div>
                         </div>
 
-                        <div class="border border-red-100 rounded-2xl p-4 bg-white text-sm shadow-sm">
-                            <h3 class="font-bold text-red-900 text-base mb-2.5 flex justify-between items-center">
-                                <span>2. งบดุล / แสดงฐานะการเงิน (Balance Sheet)</span>
-                                <span id="bsPeriodTitle" class="text-gray-500 font-semibold text-xs bg-gray-50 px-2.5 py-1 rounded-full border shadow-sm">ณ 30 พ.ย. 2026</span>
-                            </h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="bg-gray-50/80 p-3.5 rounded-2xl border shadow-sm">
-                                    <div class="font-bold mb-1.5 text-gray-800 border-b pb-1 text-sm">สินทรัพย์ (Assets)</div>
-                                    <div class="flex justify-between py-1"><span>เงินสดและธนาคาร</span><span>85,000 ฿</span></div>
-                                    <div class="flex justify-between py-1"><span>สินค้าคงเหลือ (Stock)</span><span id="bsDynamicInventory">0.00 ฿</span></div>
-                                    <div class="flex justify-between font-bold border-t mt-1.5 pt-1"><span>รวมสินทรัพย์</span><span id="bsTotalAsset">85,000 ฿</span></div>
+                        <!-- ฝั่งขวามือ: งบกำไรขาดทุน & งบดุลอัตโนมัติ -->
+                        <div class="md:col-span-7 space-y-4 max-h-[340px] overflow-y-auto pr-1">
+                            <div class="border border-red-100 rounded-2xl p-4 bg-red-50/30 text-sm shadow-sm">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h3 class="font-bold text-red-900 text-sm">1. งบกำไรขาดทุน (Income Statement)</h3>
+                                    <div class="flex bg-gray-100 p-0.5 rounded-lg text-xs font-semibold">
+                                        <button onclick="switchReportPeriod('monthly')" id="rep-monthly" class="px-2.5 py-1 rounded-md bg-red-600 text-white font-bold shadow-sm transition">รายเดือน</button>
+                                        <button onclick="switchReportPeriod('yearly')" id="rep-yearly" class="px-2.5 py-1 rounded-md text-gray-700 transition">รายปี</button>
+                                    </div>
                                 </div>
-                                <div class="bg-gray-50/80 p-3.5 rounded-2xl border shadow-sm">
-                                    <div class="font-bold mb-1.5 text-gray-800 border-b pb-1 text-sm">หนี้สิน & ส่วนทุน</div>
-                                    <div class="flex justify-between py-1"><span>เจ้าหนี้การค้า (AP)</span><span id="bsDynamicAP">0.00 ฿</span></div>
-                                    <div class="flex justify-between py-1"><span>ทุนและกำไรสะสม</span><span>85,000 ฿</span></div>
-                                    <div class="flex justify-between font-bold border-t mt-1.5 pt-1"><span>รวมหนี้สินและทุน</span><span id="bsTotalLE">85,000 ฿</span></div>
+                                <div class="space-y-1.5 text-xs">
+                                    <div class="flex justify-between font-bold">
+                                        <span>รายได้จากการขายสินค้า (Sales Revenue)</span>
+                                        <span id="plSales" class="text-emerald-700">+125,000.00 ฿</span>
+                                    </div>
+                                    <div class="flex justify-between text-gray-600 pl-3">
+                                        <span>หัก: ต้นทุนขายสินค้า (COGS)</span>
+                                        <span id="plCOGS">-75,000.00 ฿</span>
+                                    </div>
+                                    <div class="flex justify-between font-bold border-t pt-1">
+                                        <span>กำไรขั้นต้น (Gross Profit)</span>
+                                        <span id="plGrossProfit">50,000.00 ฿</span>
+                                    </div>
+                                    <div class="flex justify-between text-gray-600 pl-3">
+                                        <span>หัก: ค่าใช้จ่ายดำเนินงาน & ร้าน</span>
+                                        <span id="plDynamicExp">0.00 ฿</span>
+                                    </div>
+                                    <div class="flex justify-between font-bold text-red-700 border-t pt-1.5 text-sm">
+                                        <span>กำไรสุทธิ (Net Profit)</span>
+                                        <span id="plNetProfit">50,000.00 ฿</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border border-red-100 rounded-2xl p-4 bg-white text-sm shadow-sm">
+                                <h3 class="font-bold text-red-900 text-sm mb-2">2. งบดุล / แสดงฐานะการเงิน (Balance Sheet)</h3>
+                                <div class="grid grid-cols-1 gap-2 text-xs">
+                                    <div class="bg-gray-50 p-2.5 rounded-xl border flex justify-between">
+                                        <span>สินทรัพย์รวม (เงินสด, ธนาคาร, สินค้าคงเหลือ)</span>
+                                        <span id="bsTotalAsset" class="font-bold text-gray-900">85,000 ฿</span>
+                                    </div>
+                                    <div class="bg-gray-50 p-2.5 rounded-xl border flex justify-between">
+                                        <span>หนี้สินและส่วนทุนรวม (เจ้าหนี้การค้า + ทุน)</span>
+                                        <span id="bsTotalLE" class="font-bold text-gray-900">85,000 ฿</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -426,7 +444,21 @@
         </main>
     </div>
 
-    <!-- Modal Pop-up สำหรับแสดงตัวอย่างเอกสาร (Print / PDF) - รูปแบบฟอร์มเอกสารฉบับเต็ม A4 พร้อมช่องเซ็นชื่อ -->
+    <!-- Modal Pop-up สำหรับรายละเอียดรายรับ POS ประจำวัน -->
+    <div id="pos-detail-modal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl p-6 relative border border-red-200 space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 id="pos-modal-title" class="text-lg font-bold text-red-700">📊 รายละเอียดรายรับ POS ประจำวัน</h3>
+                <button onclick="closePosDetailModal()" class="text-gray-400 hover:text-gray-700 font-bold text-xl px-2">✕</button>
+            </div>
+            <div id="pos-modal-content" class="space-y-3 text-sm text-gray-700 bg-gray-50 p-4 rounded-2xl border">
+                <!-- Data populated dynamically -->
+            </div>
+            <button onclick="closePosDetailModal()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-2xl shadow transition text-sm">ปิดหน้าต่าง</button>
+        </div>
+    </div>
+
+    <!-- Modal Pop-up สำหรับแสดงตัวอย่างเอกสาร (Print / PDF) -->
     <div id="doc-modal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl p-8 relative border border-red-200 space-y-6 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b pb-3 no-print">
@@ -434,9 +466,7 @@
                 <button onclick="closeDocModal()" class="text-gray-400 hover:text-gray-700 font-bold text-2xl px-2">✕</button>
             </div>
 
-            <!-- โครงสร้างเอกสาร A4 ฉบับเต็ม สำหรับปริ้นออกเครื่องพิมพ์ -->
             <div id="printable-document" class="bg-white p-8 border border-gray-300 rounded-xl space-y-6 text-gray-900 shadow-inner">
-                <!-- Header ร้าน -->
                 <div class="flex justify-between items-start border-b-2 border-red-700 pb-4">
                     <div>
                         <h1 class="text-2xl font-extrabold text-red-700 tracking-wide">PET'S STATION (สถานีสัตว์เลี้ยง)</h1>
@@ -450,7 +480,6 @@
                     </div>
                 </div>
 
-                <!-- ข้อมูลลูกค้า -->
                 <div class="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-xl border text-sm">
                     <div>
                         <p class="font-bold text-gray-700">นามลูกค้า / ผู้ซื้อ:</p>
@@ -464,7 +493,6 @@
                     </div>
                 </div>
 
-                <!-- ตารางรายการสินค้า / ยอดเงิน -->
                 <table class="w-full text-left border-collapse border border-gray-300 text-sm">
                     <thead>
                         <tr class="bg-gray-100 text-gray-800 uppercase font-bold text-xs">
@@ -500,8 +528,7 @@
                     </tfoot>
                 </table>
 
-                <!-- ช่องลงลายมือชื่อ 3 ฝ่าย (ตามข้อกำหนดที่ 1) -->
-                <div class="grid grid-cols-3 gap-6 pt-8 text-center text-sm">
+                <div class="grid grid-cols-2 gap-6 pt-8 text-center text-sm">
                     <div class="border-t border-gray-400 pt-3">
                         <p class="font-semibold text-gray-700">ลงชื่อ .......................................................</p>
                         <p class="font-bold text-gray-900 mt-1">( ผู้รับเงิน / Cashier )</p>
@@ -509,18 +536,12 @@
                     </div>
                     <div class="border-t border-gray-400 pt-3">
                         <p class="font-semibold text-gray-700">ลงชื่อ .......................................................</p>
-                        <p class="font-bold text-gray-900 mt-1">( ผู้ส่งสินค้า / Dispatcher )</p>
-                        <p class="text-xs text-gray-500 mt-0.5">วันที่: ____/____/________</p>
-                    </div>
-                    <div class="border-t border-gray-400 pt-3">
-                        <p class="font-semibold text-gray-700">ลงชื่อ .......................................................</p>
-                        <p class="font-bold text-gray-900 mt-1">( ผู้รับสินค้า / Customer )</p>
+                        <p class="font-bold text-gray-900 mt-1">( นักบัญชีตรวจสอบ / Accountant )</p>
                         <p class="text-xs text-gray-500 mt-0.5">วันที่: ____/____/________</p>
                     </div>
                 </div>
             </div>
 
-            <!-- ปุ่มสั่งพิมพ์ (no-print เพื่อซ่อนตอนสั่งปริ้นจริงผ่านเครื่องพิมพ์ A4) -->
             <div class="flex gap-3 pt-2 no-print">
                 <button onclick="printCurrentDoc()" class="flex-1 bg-gray-800 hover:bg-black text-white font-bold py-3.5 rounded-xl shadow transition text-base">🖨️ พิมพ์เอกสาร (A4)</button>
                 <button onclick="downloadPdfDoc()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl shadow transition text-base">📥 บันทึก PDF</button>
@@ -546,7 +567,7 @@
     <!-- ================= JavaScript ควบคุมระบบบัญชี ================= -->
     <script>
         let registeredUsers = [
-            { email: "bankpetstation@gmail.com", pass: "1234", name: "คุณแบงค์ (ผู้บริหาร/นักบัญชี)", role: "accountant" }
+            { email: "bankpetstation@gmail.com", pass: "1234", name: "คุณแบงค์ (นักบัญชี)", role: "accountant" }
         ];
 
         let currentUser = null;
@@ -556,17 +577,55 @@
             { date: '2026-11-13', id: 'EXP-2026-089', supplier: 'ค่าไฟฟ้าประจำเดือน', account: 'ค่าไฟฟ้า (Expense)', creditAcc: 'เงินสด / ธนาคารร้าน', amount: 3500, type: 'expense' }
         ];
 
-        let transactionMockup = {
-            "TX-2026-901": { supplier: "บริษัท จรัญกิจ (Imperial Paw)", invoice: "INV-2026-1105", items: "อาหารเม็ดแมว Imperial Paw (50 กระสอบ)", amount: 15000 },
-            "TX-2026-902": { supplier: "ศรีไพศาลอาหารสัตว์", invoice: "INV-SRI-8892", items: "ทรายแมว Sunpo (100 ถุง)", amount: 28500 },
-            "TX-2026-903": { supplier: "Royal Canin Thailand", invoice: "INV-RC-5541", items: "อาหารสุนัขพันธุ์เล็ก (30 แพ็ค)", amount: 42000 }
-        };
-
         let expenseOrderMockup = {
             "TX-ORD-501": { itemsPreview: "- อาหารเม็ดแมว Imperial Paw (30 ถุง)\n- ขนมสุนัข Kinno รสเนื้อ (50 ซอง)\n- ทรายแมว Sanya Bentonite (20 ถุง)", amount: 35000 },
             "TX-ORD-502": { itemsPreview: "- อาหารสุนัขโต Royal Canin (15 ถุง)\n- อาหารแมวสูตรพิเศษ Kinno (25 ถุง)\n- วิตามินบำรุงขน Omega 3 (40 แผง)", amount: 48200 },
             "TX-ORD-503": { itemsPreview: "- ทรายแมว Sanya Bentonite 10L (80 ถุง)\n- อาหารเม็ดนิ่มสุนัข Palmy (40 ถุง)", amount: 29800 }
         };
+
+        // Mock-up ข้อมูลรายรับ POS 30 วัน
+        let posRevenueMockupData = {};
+
+        function generatePosMockup30Days() {
+            const years = ["2025", "2026"];
+            const months = ["09", "10", "11"];
+            
+            years.forEach(y => {
+                months.forEach(m => {
+                    const daysInMonth = (m === '11') ? 30 : 31;
+                    for (let d = 1; d <= daysInMonth; d++) {
+                        const dayStr = String(d).padStart(2, '0');
+                        const dateKey = `${y}-${m}-${dayStr}`;
+                        
+                        // Random realistic values for pet shop POS
+                        const drawerOpens = Math.floor(Math.random() * 8) + 12; // 12-20 times
+                        const cashIns = Math.floor(Math.random() * 3) + 1; // 1-3 times
+                        const cashAmount = Math.floor(Math.random() * 2500) + 1500;
+                        const transferAmount = Math.floor(Math.random() * 4500) + 2000;
+                        const creditCardAmount = Math.floor(Math.random() * 1500) + 500;
+                        const receivableAmount = Math.floor(Math.random() * 1000);
+                        const transferCount = Math.floor(Math.random() * 5) + 3;
+                        const totalDiscount = Math.floor(Math.random() * 300) + 50;
+                        const totalTax = Math.floor((cashAmount + transferAmount + creditCardAmount) * 0.07);
+                        const totalDay = cashAmount + transferAmount + creditCardAmount + receivableAmount;
+
+                        posRevenueMockupData[dateKey] = {
+                            date: dateKey,
+                            drawerOpens: drawerOpens,
+                            cashIns: cashIns,
+                            cashAmount: cashAmount,
+                            transferAmount: transferAmount,
+                            creditCardAmount: creditCardAmount,
+                            receivableAmount: receivableAmount,
+                            transferCount: transferCount,
+                            totalDiscount: totalDiscount,
+                            totalTax: totalTax,
+                            totalDay: totalDay
+                        };
+                    }
+                });
+            });
+        }
 
         function getLocalTodayDateString() {
             const d = new Date();
@@ -622,6 +681,7 @@
                 document.getElementById('app-accountant-content').classList.remove('hidden');
                 resetDateFilter();
                 updateFinancialStatements();
+                renderPosRevenueList();
             } else {
                 document.getElementById('error-message-text').innerText = "อีเมลหรือรหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง";
                 document.getElementById('login-error-alert').classList.remove('hidden');
@@ -658,7 +718,6 @@
             document.getElementById('form-procurement-container').classList.add('hidden');
             document.getElementById('form-tax-container').classList.add('hidden');
             document.getElementById('section-journal').classList.add('hidden');
-            document.getElementById('section-reports').classList.add('hidden');
 
             document.getElementById('btn-expense').className = "px-3.5 py-2 text-sm font-bold rounded-xl transition text-white hover:bg-red-700/80";
             document.getElementById('btn-procurement').className = "px-3.5 py-2 text-sm font-bold rounded-xl transition text-white hover:bg-red-700/80";
@@ -679,13 +738,84 @@
                 document.getElementById('btn-tax').className = "px-3.5 py-2 text-sm font-bold rounded-xl transition bg-white text-red-700 shadow";
             } else if(tab === 'reports') {
                 document.getElementById('section-journal').classList.remove('hidden');
-                document.getElementById('section-reports').classList.remove('hidden');
                 document.getElementById('btn-reports').className = "px-3.5 py-2 text-sm font-bold rounded-xl transition bg-white text-red-700 shadow";
                 updateFinancialStatements();
+                renderPosRevenueList();
             }
         }
 
-        // ฟังก์ชันจัดการเพิ่มเมนูค่าใช้จ่าย (ตามข้อ 1)
+        // Render รายรับ POS ฝั่งซ้ายตาม Filter เดือนและปี (30 วัน)
+        function renderPosRevenueList() {
+            const selMonth = document.getElementById('posFilterMonth').value;
+            const selYear = document.getElementById('posFilterYear').value;
+            const container = document.getElementById('pos-revenue-list-container');
+            container.innerHTML = '';
+
+            let monthlySum = 0;
+            let countDays = 0;
+
+            for (let d = 1; d <= 31; d++) {
+                const dayStr = String(d).padStart(2, '0');
+                const key = `${selYear}-${selMonth}-${dayStr}`;
+                const data = posRevenueMockupData[key];
+
+                if (data) {
+                    countDays++;
+                    monthlySum += data.totalDay;
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = "bg-white p-3 rounded-xl border border-gray-200 hover:border-red-400 cursor-pointer transition shadow-xs flex justify-between items-center";
+                    itemDiv.onclick = () => openPosDetailModal(data);
+                    itemDiv.innerHTML = `
+                        <div>
+                            <div class="font-bold text-xs text-gray-800">📅 วันที่ ${d} ${getMonthNameTh(selMonth)} ${selYear}</div>
+                            <div class="text-[11px] text-gray-500">สด: ฿${data.cashAmount.toLocaleString()} | โอน: ฿${data.transferAmount.toLocaleString()}</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-extrabold text-xs text-emerald-700">+฿${data.totalDay.toLocaleString()}</div>
+                            <div class="text-[10px] text-red-600 underline">ดูรายละเอียด</div>
+                        </div>
+                    `;
+                    container.appendChild(itemDiv);
+                }
+            }
+            document.getElementById('posTotalMonthlyRevenue0' in window ? '' : 'posTotalMonthlyRevenue').innerText = `${monthlySum.toLocaleString('en-US', { minimumFractionDigits: 2 })} ฿`;
+        }
+
+        function getMonthNameTh(m) {
+            const months = { "09": "กันยายน", "10": "ตุลาคม", "11": "พฤศจิกายน" };
+            return months[m] || m;
+        }
+
+        // เปิด Modal ดูรายละเอียดรายรับ POS ของวันนั้น
+        function openPosDetailModal(data) {
+            document.getElementById('pos-modal-title').innerText = `📊 รายละเอียดรายรับ POS ประจำวันที่ ${data.date}`;
+            document.getElementById('pos-modal-content').innerHTML = `
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div class="bg-white p-2.5 rounded-xl border">เปิดลิ้นชักเก็บเงิน: <b class="text-red-700">${data.drawerOpens} ครั้ง</b></div>
+                    <div class="bg-white p-2.5 rounded-xl border">การนำเงินเข้าเก๊ะ: <b class="text-red-700">${data.cashIns} ครั้ง</b></div>
+                    <div class="bg-white p-2.5 rounded-xl border">รับเงินสดรวม: <b class="text-gray-900">${data.cashAmount.toLocaleString()} ฿</b></div>
+                    <div class="bg-white p-2.5 rounded-xl border">รับเงินโอน QR: <b class="text-gray-900">${data.transferAmount.toLocaleString()} ฿</b></div>
+                    <div class="bg-white p-2.5 rounded-xl border">รับบัตรเครดิต: <b class="text-gray-900">${data.creditCardAmount.toLocaleString()} ฿</b></div>
+                    <div class="bg-white p-2.5 rounded-xl border">ลูกหนี้การค้า: <b class="text-gray-900">${data.receivableAmount.toLocaleString()} ฿</b></div>
+                    <div class="bg-white p-2.5 rounded-xl border">ชำระด้วยการโอน: <b class="text-blue-700">${data.transferCount} ครั้ง</b></div>
+                    <div class="bg-white p-2.5 rounded-xl border">รวมส่วนลดให้ลูกค้า: <b class="text-amber-600">${data.totalDiscount.toLocaleString()} ฿</b></div>
+                </div>
+                <div class="bg-red-50 p-3 rounded-xl border border-red-200 flex justify-between items-center text-sm font-bold text-red-900">
+                    <span>รวมภาษีมูลค่าเพิ่มคิดให้ (VAT 7%):</span>
+                    <span>${data.totalTax.toLocaleString()} ฿</span>
+                </div>
+                <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200 flex justify-between items-center text-base font-extrabold text-emerald-900">
+                    <span>ยอดรายรับสุทธิประจำวัน:</span>
+                    <span>${data.totalDay.toLocaleString()} ฿</span>
+                </div>
+            `;
+            document.getElementById('pos-detail-modal').classList.remove('hidden');
+        }
+
+        function closePosDetailModal() {
+            document.getElementById('pos-detail-modal').classList.add('hidden');
+        }
+
         function openAddExpenseModal() {
             document.getElementById('add-expense-modal').classList.remove('hidden');
         }
@@ -720,7 +850,6 @@
             }
         }
 
-        // ฟังก์ชันบันทึกบิลค่าใช้จ่ายร้าน (ตามข้อ 1 และ 2)
         function processExpenseBillApproval() {
             const dateStr = document.getElementById('txDate').value || getLocalTodayDateString();
             const category = document.getElementById('expenseCategoryType').value;
@@ -772,7 +901,6 @@
             alert(`🎉 ลงบัญชีอัตโนมัติสำเร็จ!\n- บัญชีโอน: ${bankCode} (${bankNo})\n- ยอดรวมสุทธิ: ${totalAmount.toLocaleString()} ฿`);
         }
 
-        // ฟังก์ชันเชื่อมโยงข้อมูล Tax ตามข้อ 3 (รหัสธุรกรรม 4 ตัวแรก ค.ศ., 2 ตัวเดือน, 3 ตัวจำนวนครั้ง)
         function onTaxTransactionSelected() {
             const dropdown = document.getElementById('taxRefIdDropdown');
             const selectedOpt = dropdown.options[dropdown.selectedIndex];
@@ -796,7 +924,6 @@
             }
         }
 
-        // ฟังก์ชันออกแบบเอกสาร และแสดงผล Pop-up พิมพ์เอกสารขนาด A4 ฉบับเต็ม (ตามเงื่อนไขข้อ 1 และ 2)
         function generateTaxDocument() {
             const docType = document.getElementById('taxDocType').value;
             const dropdown = document.getElementById('taxRefIdDropdown');
@@ -805,9 +932,8 @@
             const amount = parseFloat(document.getElementById('taxAmount').value) || 0;
             const todayStr = getLocalTodayDateString();
 
-            let docTypeNameTh = docType === 'RECEIPT' ? 'ใบเสร็จรับเงิน (Cash Receipt)' : (docType === 'TAX_INVOICE' ? 'ใบกำกับภาษีเต็มรูปแบบ (Tax Invoice)' : 'ใบลดหนี้ / เพิ่มหนี้ (Credit/Debit Note - CN)');
+            let docTypeNameTh = docType === 'RECEIPT' ? 'ใบเสร็จรับเงิน (Cash Receipt)' : (docType === 'TAX_INVOICE' ? 'ใบกำกับภาษีเต็มรูปแบบ (Tax Invoice)' : 'ใบลดหนี้ / เพิ่มหนี้ (Credit / Debit Note - CN)');
             
-            // อัปเดตข้อมูลในหน้าพิมพ์ A4
             document.getElementById('modal-doc-title').innerText = `📄 ตัวอย่างเอกสาร: ${docTypeNameTh} (ขนาด A4)`;
             document.getElementById('doc-badge-type').innerText = docTypeNameTh;
             document.getElementById('print-doc-no').innerText = `${docType}-${refId}`;
@@ -825,10 +951,8 @@
             document.getElementById('print-vat').innerText = vatCalc.toLocaleString('en-US', { minimumFractionDigits: 2 });
             document.getElementById('print-grand-total').innerText = amount.toLocaleString('en-US', { minimumFractionDigits: 2 }) + " ฿";
 
-            // เปิด Modal Pop-up A4
             document.getElementById('doc-modal').classList.remove('hidden');
 
-            // เงื่อนไขข้อ 2: หลังจากกดปุ่มออกแบบเอกสารแล้ว ไม่ต้องเชื่อมไปสมุดเครดิตเดบิตทั้ง 3 ประเภทเอกสาร สำหรับ Receipt และ Tax/CN ให้ทำการบันทึกตามเงื่อนไขบัญชีโดยไม่ส่งไปสมุดเครดิตเดบิตผิดเพี้ยน
             if (docType !== 'RECEIPT') {
                 journalEntries.unshift({
                     date: todayStr, id: `TAX-${refId}`,
@@ -900,11 +1024,11 @@
             const btnM = document.getElementById('rep-monthly');
             const btnY = document.getElementById('rep-yearly');
             if(mode === 'monthly') {
-                btnM.className = "px-4 py-2 rounded-xl bg-red-600 text-white font-bold shadow-sm transition";
-                btnY.className = "px-4 py-2 rounded-xl text-gray-700 hover:text-gray-900 transition";
+                btnM.className = "px-2.5 py-1 rounded-md bg-red-600 text-white font-bold shadow-sm transition";
+                btnY.className = "px-2.5 py-1 rounded-md text-gray-700 transition";
             } else {
-                btnY.className = "px-4 py-2 rounded-xl bg-red-600 text-white font-bold shadow-sm transition";
-                btnM.className = "px-4 py-2 rounded-xl text-gray-700 hover:text-gray-900 transition";
+                btnY.className = "px-2.5 py-1 rounded-md bg-red-600 text-white font-bold shadow-sm transition";
+                btnM.className = "px-2.5 py-1 rounded-md text-gray-700 transition";
             }
             updateFinancialStatements();
         }
@@ -931,16 +1055,16 @@
             document.getElementById('plDynamicExp').innerText = totalExpenses.toLocaleString('en-US', { minimumFractionDigits: 2 }) + " ฿";
             document.getElementById('plNetProfit').innerText = netProfit.toLocaleString('en-US', { minimumFractionDigits: 2 }) + " ฿";
 
-            document.getElementById('bsDynamicInventory').innerText = totalInventory.toLocaleString('en-US', { minimumFractionDigits: 2 }) + " ฿";
-            document.getElementById('bsDynamicAP').innerText = totalAP.toLocaleString('en-US', { minimumFractionDigits: 2 }) + " ฿";
             document.getElementById('bsTotalAsset').innerText = (85000 + totalInventory).toLocaleString('en-US', { minimumFractionDigits: 2 }) + " ฿";
             document.getElementById('bsTotalLE').innerText = (85000 + totalAP).toLocaleString('en-US', { minimumFractionDigits: 2 }) + " ฿";
         }
 
         window.onload = function() {
+            generatePosMockup30Days();
             resetDateFilter();
             updateFinancialStatements();
             onTaxTransactionSelected();
+            renderPosRevenueList();
         };
     </script>
 </body>
